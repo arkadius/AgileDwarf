@@ -5,6 +5,11 @@ var Sprints = function ()
 
     var readyList = [];
 
+    obj.getSettings = function ()
+    {
+	return settings;
+    };
+
     obj.setOptions = function (opt)
     {
         settings = opt;
@@ -82,7 +87,7 @@ var Sprints = function ()
                             onChangeColumnPos(newList, params, item);
                         $.ajax(
                         {
-                            url: "/adtaskinl/update",
+                            url: Sprints.getUrl("taskinlupdate"),
                             data: params
                         });
                     }
@@ -91,7 +96,7 @@ var Sprints = function ()
                     onChangeColumn(newList, params, oldList, item);
                     $.ajax(
                     {
-                        url: "/adtaskinl/update",
+                        url: Sprints.getUrl("taskinlupdate"),
                         data: params
                     });
                 }
