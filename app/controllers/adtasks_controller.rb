@@ -39,7 +39,7 @@ class AdtasksController < ApplicationController
     if params[:trackers] && params[:trackers] != 'null'
       @trackers = params[:trackers].split(',')
     else
-      @trackers = @project.trackers.pluck(:name) & %w(Task Bug)
+      @trackers = @project.trackers.pluck(:name)
     end
     trackers_ids = @trackers.include?('All') ? nil : Tracker.find_all_by_name(@trackers).map(&:id)
 

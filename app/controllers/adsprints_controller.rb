@@ -24,7 +24,7 @@ class AdsprintsController < ApplicationController
     if params[:trackers] && params[:trackers] != 'null'
       @trackers = params[:trackers].split(',')
     else
-      @trackers = @project.trackers.pluck(:name) & %w(Epic Story Bug)
+      @trackers = @project.trackers.pluck(:name)
     end
     trackers_ids = @trackers.include?('All') ? nil : Tracker.find_all_by_name(@trackers).map(&:id)
     @backlog = SprintsTasks.get_backlog(@project, trackers_ids)

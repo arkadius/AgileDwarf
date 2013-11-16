@@ -5,7 +5,7 @@
 <%= javascript_include_tag 'libs/jquery.textPlaceholder.js', :plugin => 'agile_dwarf' %>
 <%= javascript_include_tag 'libs/jquery.jeditable.ptext.js', :plugin => 'agile_dwarf' %>
 <%= javascript_include_tag 'libs/jquery.qtip.min.js', :plugin => 'agile_dwarf' %>
-<%= javascript_include_tag 'libs/select2/select2.min.js', plugin: 'agile_dwarf' %>
+<%= javascript_include_tag 'libs/select2/select2.min.js', :plugin => 'agile_dwarf' %>
 <%= javascript_include_tag 'common', :plugin => 'agile_dwarf' %>
 <%= javascript_include_tag 'sprints_mine', :plugin => 'agile_dwarf' %>
 <%= stylesheet_link_tag 'sprints.css', :plugin => 'agile_dwarf', :media => 'print,screen' %>
@@ -83,7 +83,7 @@
         </label>
       </div>
       <div>
-        <%= select_tag :trackers, options_for_tracker_select, multiple: true  %>
+        <%= select_tag :trackers, options_for_tracker_select, :multiple => true  %>
       </div>
     </div>
   </fieldset>
