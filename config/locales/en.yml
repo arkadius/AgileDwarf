@@ -1,5 +1,6 @@
 # English strings go here for Rails i18n
 en:
+  label_menu_all_sprints: All Sprints
   label_menu_sprints: Sprints
   label_menu_mytasks: Tasks
   label_menu_burndown: Run charts
@@ -21,6 +22,7 @@ en:
   label_sprints_description_panel_header: Description
   label_sprints_select_all: All
   label_sprints_select_none: Not in sprint
+  label_sprints_select_current: Current sprint
   label_sprints_showclosed: Show closed sprints
   label_sprints_filter: Show sprint
   label_sprints_title_fold: Folding
@@ -36,6 +38,15 @@ en:
   label_settings_tracker: Default tracker for new tasks
   label_settings_activity: Default activity for spent time
   label_settings_closedstatus: Status, that marks task as closed
-  label_settings_column1status: Status for 1st column in Tasks
-  label_settings_column2status: Status for 2nd column in Tasks
-  label_settings_column3status: Status for 3rd column in Tasks
+  label_settings_column1status: Task Status for 1st column
+  label_settings_column2status: Task Status for 2nd column
+  label_settings_column3status: Task Status for 3th column
+  label_settings_column4status: Task Status for 4th column
+  label_settings_column5status: Task Status for 5th column
+  label_settings_column6status: Task Status for 6th column
+  label_settings_column7status: Task Status for 7th column
+  label_settings_columncount: Number of columns
+  label_settings_check_custom_fields: 'Used custom fields for tasks:'
+  label_filter_sprint_select: Sprint
+  label_filter_user_select: User
+  label_filter_trackers_select: Trackers

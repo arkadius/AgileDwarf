@@ -9,30 +9,70 @@ class AdtasksController < ApplicationController
     @project_id = @project.id
     @assignables = @project.assignable_users
     @assignables_list = {}
-    @project.assignable_users.each{|u| @assignables_list[u.id] = u.firstname + ' ' + u.lastname}
+    @project.assignable_users.each{|u| @assignables_list[u.id] = u.name}
+    # Support Assign to nobody
+    @assignables_list[""] = ""
+    @available_custom_fields = SprintsTasks.available_custom_fields(@project)
+    @available_custom_fields_ids = @available_custom_fields.map(&:id)
 
     # filter values
-    @selected = params[:sprint] || (@sprints[0].nil? ? 'all' : @sprints[0].id.to_s)
+    @selected = params[:sprint] || 'current'
+
     case @selected
       when 'all'
         sprint = nil
       when 'none'
         sprint = 'null'
+      when 'current'
+        sprint = 'current'
       else
         sprint = @selected
     end
-    user = @user = params[:user] || 'current'
-    user = nil if @user == 'all'
 
-    @plugin_path = File.join(Redmine::Utils.relative_url_root, 'plugin_assets', 'AgileDwarf')
+    @user = params[:user] || 'all'
+    if @user == 'all'
+      user = nil
+    else
+      user = @user
+    end
 
-    # new + in progress + resolved
-    status_ids = [Setting.plugin_AgileDwarf[:stcolumn1].to_i, Setting.plugin_AgileDwarf[:stcolumn2].to_i, Setting.plugin_AgileDwarf[:stcolumn3].to_i]
+    if params[:trackers] && params[:trackers] != 'null'
+      @trackers = params[:trackers].split(',')
+    else
+      @trackers = @project.trackers.pluck(:name)
+    end
+    trackers_ids = @trackers.include?('All') ? nil : Tracker.find_all_by_name(@trackers).map(&:id)
+
+    @plugin_path = File.join(Redmine::Utils.relative_url_root, 'plugin_assets', 'agile_dwarf')
+    status_ids = []
+    colcount = Setting.plugin_agile_dwarf['stcolumncount'].to_i
+    for i in 1 .. colcount
+      status_ids << Setting.plugin_agile_dwarf[('stcolumn' + i.to_s)].to_i
+    end
     @statuses = {}
     IssueStatus.find_all_by_id(status_ids).each {|x| @statuses[x.id] = x.name}
-    @columns = [{:tasks => SprintsTasks.get_tasks_by_status(@project, status_ids[0], sprint, user), :id => status_ids[0]},
-                {:tasks => SprintsTasks.get_tasks_by_status(@project, status_ids[1], sprint, user), :id => status_ids[1]},
-                {:tasks => SprintsTasks.get_tasks_by_status(@project, status_ids[2], sprint, user), :id => status_ids[2]}]
+    @columns = []
+    for i in 0 .. colcount - 1
+      tasks = SprintsTasks.get_tasks_by_status_and_tracker(@project, status_ids[i], trackers_ids, sprint, user)
+      points = {}
+      tasks.each do |task|
+        # We process only int custom fields
+        task.custom_field_values.each do |cfv|
+          if cfv.custom_field.field_format == 'int' && (@available_custom_fields_ids.include? cfv.custom_field.id)
+            value = cfv.value.to_i
+            if value != 0
+              custom_field = cfv.custom_field
+              points[custom_field] ||= {}
+              points[custom_field][task.assigned_to] ||= 0
+              points[custom_field][task.assigned_to] += value
+              points[custom_field][:sum] ||= 0
+              points[custom_field][:sum] += value
+            end
+          end
+        end
+      end
+      @columns << {:tasks => tasks, :id => status_ids[i], :points => points}
+    end
   end
 
   private

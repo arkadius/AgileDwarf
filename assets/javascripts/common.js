@@ -1,5 +1,7 @@
-var Sprints = function ()
+var Sprints = function ($)
 {
+    $.noConflict();
+
     var settings = {};
     var obj = {};
 
@@ -87,7 +89,7 @@ var Sprints = function ()
                             onChangeColumnPos(newList, params, item);
                         $.ajax(
                         {
-                            url: Sprints.getUrl("taskinlupdate"),
+                            url: settings.urls['taskdnd'],
                             data: params
                         });
                     }
@@ -96,7 +98,7 @@ var Sprints = function ()
                     onChangeColumn(newList, params, oldList, item);
                     $.ajax(
                     {
-                        url: Sprints.getUrl("taskinlupdate"),
+                        url: settings.urls['taskdnd'],
                         data: params
                     });
                 }
@@ -137,7 +139,7 @@ var Sprints = function ()
     $(function()
     {
         for (var i = 0, len = readyList.length; i < len; ++i)
-            readyList[i]();
+            readyList[i]($);
         $('.collapsible legend').click(function()
         {
             var fieldset = $(this).parent();
@@ -147,4 +149,8 @@ var Sprints = function ()
     });
 
     return obj;
-}();
+}(jQuery);
+
+jQuery(document).ready(function() {
+    jQuery('#tracker_selection select').select2();
+});

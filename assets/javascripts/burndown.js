@@ -1,5 +1,7 @@
-var Burndown = function ()
+var Burndown = function ($)
 {
+    $.noConflict();
+
     var obj = {};
     var opt = {};
     var settings = {};
@@ -10,7 +12,9 @@ var Burndown = function ()
             return null;
         // 2011/11/03 00:00:00 +0800
         var t = mysql.split(/[\/ \-:]/);
+        //var t = mysql.split('-');
         // [Y, M, D]
+        //return Date.UTC(t[0], t[1] - 1, t[2].substr(0,2));
         return Date.UTC(t[0], t[1] - 1, t[2]);
     };
 
@@ -43,6 +47,7 @@ var Burndown = function ()
         {
             if (!tasks.hasOwnProperty(id))
                 continue;
+
             tasks[id].created_on = Date.fromMysql(tasks[id].created_on);
         }
         // loop through changes
@@ -64,7 +69,8 @@ var Burndown = function ()
                 else
                 {
                     // rest of work = ((100 - done_ratio) * estimate) / 100
-                    sum += ((100 - task.done_ratio) * (task.estimated_hours || 0)) / 100;
+                    console.log(task.sprints_tasks.done_ratio);
+                    sum += ((100 - task.sprints_tasks.done_ratio) * (task.sprints_tasks.estimated_hours || 0)) / 100;
                 }
             }
             // add new point to series
@@ -207,4 +213,4 @@ var Burndown = function ()
     });
 
     return obj;
-}();
+}(jQuery);
